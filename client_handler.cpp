@@ -40,7 +40,7 @@ void ClientHandler::handleClient()
         status = "405 Method Not Allowed";
         body = "<h1>405 Method Not Allowed</h1>";
         sendResponse(status, body);
-        std::cout << "Response status: " << status << std::endl;
+        //std::cout << "Response status: " << status << std::endl;
         closesocket(clientSocket);
         return;
     }
@@ -82,6 +82,7 @@ std::string ClientHandler::composeHTTPResponse(const std::string& status, const 
     response << "HTTP/1.1 " << status << "\r\n"
              << "Content-Type: text/html\r\n"
              << "Content-Length: " << body.size() << "\r\n"
+             //<< "Connection: close\r\n"
              << "\r\n"
              << body;
     return response.str();

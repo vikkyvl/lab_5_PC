@@ -2,6 +2,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <thread>
+#include "thread_pool.h"
 
 #include "client_handler.h"
 
@@ -49,6 +50,9 @@ int main()
 
     std::cout << "Server started on port " << PORT << "." << std::endl;
 
+    //ThreadPool pool;
+    //pool.start();
+
     while(true)
     {
         sockaddr_in clientAddr;
@@ -68,6 +72,8 @@ int main()
         //std::cout << "Client connected from IP: " << clientIp << " | Port: " << clientPort << std::endl;
 
         std::thread(ClientHandler(clientSocket, clientIp, clientPort)).detach();
+        //ClientData clientData{clientSocket, clientIp, clientPort};
+        //pool.add_client(clientData);
     }
 
     closesocket(serverSocket);

@@ -3,6 +3,8 @@
 #include <ws2tcpip.h>
 #include <thread>
 
+#include "client_handler.h"
+
 #pragma comment(lib, "ws2_32.lib")
 
 #define PORT 8080
@@ -46,6 +48,27 @@ int main()
     }
 
     std::cout << "Server started on port " << PORT << "." << std::endl;
+
+    while(true)
+    {
+        sockaddr_in clientAddr;
+        int clientAddrSize = sizeof(clientAddr);
+
+        SOCKET clientSocket = accept(serverSocket, (sockaddr*)&clientAddr, &clientAddrSize);
+        if (clientSocket == INVALID_SOCKET)
+        {
+            std::cerr << "Error accepting client connection.\n";
+            continue;
+        }
+
+        char clientIp[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(clientAddr.sin_addr), clientIp, INET_ADDRSTRLEN);
+        int clientPort = ntohs(clientAddr.sin_port);
+
+        //std::cout << "Client connected from IP: " << clientIp << " | Port: " << clientPort << std::endl;
+
+        std::thread(ClientHandler(clientSocket, clientIp, clientPort)).detach();
+    }
 
     closesocket(serverSocket);
     WSACleanup();

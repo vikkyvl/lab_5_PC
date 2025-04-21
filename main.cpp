@@ -50,8 +50,8 @@ int main()
 
     std::cout << "Server started on port " << PORT << "." << std::endl;
 
-    //ThreadPool pool;
-    //pool.start();
+    ThreadPool pool;
+    pool.start();
 
     while(true)
     {
@@ -71,9 +71,9 @@ int main()
 
         //std::cout << "Client connected from IP: " << clientIp << " | Port: " << clientPort << std::endl;
 
-        std::thread(ClientHandler(clientSocket, clientIp, clientPort)).detach();
-        //ClientData clientData{clientSocket, clientIp, clientPort};
-        //pool.add_client(clientData);
+        //std::thread(ClientHandler(clientSocket, clientIp, clientPort)).detach();
+        ClientData clientData{clientSocket, clientIp, clientPort};
+        pool.add_client(clientData);
     }
 
     closesocket(serverSocket);
